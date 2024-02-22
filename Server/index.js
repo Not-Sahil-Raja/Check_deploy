@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import { User } from "./users.model.js";
 // const express = require("express");
 let PORT = 5000;
 let MongoDB_URI =
@@ -18,6 +19,7 @@ try {
   process.exit(1);
 }
 
+// Initialize Express
 const app = express();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
@@ -25,4 +27,14 @@ app.listen(PORT, () => {
 
 app.get("/", (req, res) => {
   res.send("Server up and running!");
+});
+
+app.get("/api", async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (error) {
+    console.log("Error: ", error);
+    res.status(500).json({ message: "Server Error" });
+  }
 });
